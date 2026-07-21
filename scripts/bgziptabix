@@ -1,0 +1,8 @@
+#!/bin/bash 
+
+# usage: cat uncompressed.vcf | ./bgziptabix compressed.vcf.gz
+
+file=$1
+
+bgzip >$file
+tabix -f -p vcf $file

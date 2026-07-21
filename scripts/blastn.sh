@@ -1,0 +1,1 @@
+blastn -query latgrad200506.outliers.LFMMBayeScanRDA.nodup.consensus.fa -db populations.snps_mim09_biallelic_minDP5_mm08_maf003_thin500_mim05.recode_hwe025.vcf.recode.vcf.fa -out blastn_latgrad_populations_final_filtered_vcf.txt -max_target_seqs 1 -evalue 1e-20 -perc_identity 98 -num_threads 100 -outfmt 6
