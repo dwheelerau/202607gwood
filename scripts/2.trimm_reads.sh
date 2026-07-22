@@ -3,10 +3,12 @@
 # Drop reads below the 142 bases long (MINLEN:142)
 # No quality trimming as this effects downstream results
 # and the data is phred >30
+## usage: bash scipt.sh <dir_containing_seqs>
+## ie
+##bash scripts/2.trimm_reads.sh George_data_subset_for_reina_analysis/DDRAD_1_for_reina
 
 ##### mamba activate stack-v2.64 #####
 
-#DATA=/home/wheeled/projects/202407mcoleman/
 adapt_path=/home/wheeled/mambaforge/envs/stack-v2.64/share/trimmomatic-0.39-2/adapters
 
 for r1 in "$1"/*_1.fastq.gz
