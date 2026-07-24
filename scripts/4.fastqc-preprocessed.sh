@@ -1,6 +1,6 @@
 #!/bin/bash
 
-data=data/pre-processed
+data=data/adtrim.stdlen
 outdir=fastqc-final
 mkdir -p $outdir
 
