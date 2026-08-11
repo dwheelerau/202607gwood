@@ -61,8 +61,9 @@ A range of population level statics and file exports for downstream
 applications.   
 
 
-9. Reference based stacks  
-Align each sample with BWA to the reference genome.  
+9. Reference based stacks for testing   
+- Align each sample with BWA to the reference genome.  
+- run `ref_map.pl`  
 
 ## Run gstacks to remove PCR duplicates  
 See `9.stacks-ref.sh`.  
