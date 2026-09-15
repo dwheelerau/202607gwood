@@ -5,6 +5,19 @@ Stacks analysis of RADseq data for **E. radiata**. Combine data from
 George and Reina. Run denovo-stacks for population genomics. Also, run
 reference stacks for comparison and as an excuse to write the scripts.      
 
+## Issues!  
+Next time rename the files so they are in the correct format from the start of the pipeline and also
+check that the proper PE naming notation is used for the fastq headers (see below).  
+- using the filenames with barcodes does not work as tsv2bam requres the format <sample>.1.fq.gz
+- the fastq headers are missing /1 /2 tags so tsv2bam fails, use `fix_fastq_headers.sh` to fix this
+- The blank seems to contain orphin pairs, removing them from the analysis allows the pipeline to complete
+- EDDA02-1A and EDDA02-1A2 both get globbed when using `ustacks -m 3 -M 3 -N 5 -t gzfastq -f $DATA/${sample}*.1.fq.gz`
+
+The last error above causes the pipeline to crash because two files are passed to ustacks as input for EDDA02-1A,
+the other sample is processed correctly as EDDA02-1A2 will not pickup the other sample in the wild card search. To
+fix this I rand EDDA02-1A manually outside of the loop assigning 71 as the ID, which is the number that would have
+been assigned had it worked.  
+
 ## Workflow  
 1. Fastqc and multiqc summary.  
 Nothing jumps out. The minimum R1 read is 142 bases, so will hard trim
@@ -14,6 +27,8 @@ QC shows phred scores >30 across the length of the read so I can let the
 Quality algorithms just do their job rather than using trimming.      
 
 I used `multiqc` to generate a summary report of all the many fastqc reports.  
+
+**I should have used `0.5.add_slash.sh` to add the \1 and \2 tags to the fastq headers**
 
 2. Trim adaptors using trimomatic     
 Fastqc does show adaptors need to remove these. We do not apply any
@@ -31,8 +46,20 @@ following bbduk parameter `forcetrimright=141` (uses 0 based indexing).
 
 Finally the outputs are group into a new directory `data/adtrim.stdlen/`.  
 
+**At this point I should have removed the barcodes from the filenames so they were <sample.1.fq.gz> etc**
+
 4. Re-run fastqc just to check that nothing silly has happend during processing  
 7. Stacks *de novo*  
+As indicated above I had a few issues with the \1 \2 fastq headers, the filenames,
+the blanks samples containing orphin pairs, and the EDDA02 wildcard clash. To overcome these
+issues I have a several `7.stacks` scripts.  
+
+`scripts/7.stacks.sh` - first run failed when server crashed, uses all samples for catalogue
+`scripts/7.stacks-ref.sh` - testing reference based calling
+`scripts/7.stacks-restart.sh` - restart uses `$DATA/${sample}_*.1.fq.gz` so no wildcard clash, but fails at blank. See `logs/stacks.run2-restart.log`   
+`scripts/7.stacks-subset.sh` - Uses top 5 coverage samples per pop to reduce processing time, crashed at blank.  
+`scripts/7.stacks-subset2.sh` - As above, but re-start after EDDA02 wildcard issue.  
+
 This script runs through the stacks workflow, the steps are as follows:  
 
 ## Build de novo loci using ustacks with the forward read only  
@@ -59,7 +86,6 @@ Variants are called and individuals are genotyped with `gstacks`.
 ## Run populations  
 A range of population level statics and file exports for downstream
 applications.   
-
 
 9. Reference based stacks for testing   
 - Align each sample with BWA to the reference genome.  
