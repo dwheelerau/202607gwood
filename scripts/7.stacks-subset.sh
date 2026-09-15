@@ -299,6 +299,8 @@ for sample in $files
 do
     #### set m, M, N ####
     echo "running $sample with ustacks"
+	## DANGER: fix use $DATA/${sample}.1.fq.gz without the wildcard or it could glob up other files ##
+	## if two files are captured by the pattern the pipeline will crash ##
     ustacks -m 3 -M 3 -N 5 -t gzfastq -f $DATA/${sample}*.1.fq.gz \
 	    -o $src/stacks2 -i $id --name $sample -p 64
     let "id+=1"

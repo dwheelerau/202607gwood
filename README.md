@@ -54,6 +54,8 @@ As indicated above I had a few issues with the \1 \2 fastq headers, the filename
 the blanks samples containing orphin pairs, and the EDDA02 wildcard clash. To overcome these
 issues I have a several `7.stacks` scripts.  
 
+The data is located in `data/adtrim.stdlen/` (inc blank, \1 \2) and `data/adtrim.stdlen2/` (no blank)
+
 `scripts/7.stacks.sh` - first run failed when server crashed, uses all samples for catalogue
 `scripts/7.stacks-ref.sh` - testing reference based calling
 `scripts/7.stacks-restart.sh` - restart uses `$DATA/${sample}_*.1.fq.gz` so no wildcard clash, but fails at blank. See `logs/stacks.run2-restart.log`   
